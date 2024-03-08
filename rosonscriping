@@ -1,0 +1,42 @@
+from bs4 import BeautifulSoup
+import requests
+import csv
+from pathlib import Path
+
+# URL of the page to be scraped
+url = "https://www.lawson.co.jp/recommend/allergy/detail/index.html"
+
+# Send a GET request to the URL
+response = requests.get(url)
+
+# Parse the HTML content of the page
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Initialize a list to store the scraped data
+data = []
+
+# Find all product containers. This is a placeholder and needs to be adjusted based on the actual page structure.
+# The actual selector might need to be updated based on the website's structure.
+for product in soup.select('.product-container'):
+    # Extract product name, protein content, and calories
+    # These selectors are placeholders and need to be adjusted based on the actual page structure.
+    name = product.select_one('.ttl').text.strip()
+    protein = product.select_one('dt:contains("タンパク質") + dd').text.strip()
+    calories = product.select_one('dt:contains("カロリー") + dd').text.strip()
+    
+    # Append the extracted information to the data list
+    data.append([name, protein, calories])
+
+# CSVファイルのパスを設定
+csv_file_name = Path('c:/Users/frontier-Python/Desktop/lawson_products.csv')
+
+
+# Write the data to a CSV file
+with open(csv_file_name, 'w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Product Name', 'Protein', 'Calories'])
+    writer.writerows(data)
+
+# Return the path of the created CSV file
+csv_file_name = 'c:\\Users\\frontier-Python\\Desktop\\lawson_products.csv'
+
